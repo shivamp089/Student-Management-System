@@ -1,79 +1,145 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8" />
-<title>Student Management</title>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-	crossorigin="anonymous">
-	
-<style>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Student Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
 
+    <style>
+      /* Navbar background */
+      .custom-navbar {
+        background: linear-gradient(90deg, #0d1b2a, #1b263b);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
 
-</style>	
-</head>
-<body >
-	<nav class="navbar navbar-dark bg-dark">
-		<div class="container">
-			<a class="navbar-brand font-weight-bold" href="/students">
-				Student Management </a>
+      /* Brand styling */
+      .navbar-brand {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
 
-			<ul class="navbar-nav flex-row ml-auto">
-				<li class="nav-item mx-2"><a class="nav-link text-white"
-					href="/home">Home</a></li>
-				<li class="nav-item mx-2"><a class="nav-link text-white"
-					href="/students">Students</a></li>
-				<li class="nav-item mx-2"><a class="nav-link text-white"
-					href="/students/new">Add Student</a></li>
-			</ul>
-		</div>
-	</nav>
+      /* Nav links */
+      .nav-link {
+        color: #ffffff !important;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
 
-	<div class="container">
-		<div>
-			<h2 class="text-center">Student List</h2>
-		</div>
-		<div class="row">
-			<div class="col-lg-3">
-				<a th:href="@{students/new}" class="btn btn-primary btn-sm mb-2">Add
-					Student</a>
-			</div>
+      /* Hover effect */
+      .nav-link:hover {
+        color: #ffd60a !important;
+        transform: scale(1.05);
+      }
 
-		</div>
-		<table class="table table-stripped table-bordered">
-			<thead>
-				<tr class="bg-dark text-white">
-					<th>First Name</th>
-					<th>Last Name</th>
-					<th>Email</th>
-					<th>Mobile</th>
-					<th>Action</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="student : ${students}">
-					<td th:text="${student.firstName}"></td>
-					<td th:text="${student.lastName}"></td>
-					<td th:text="${student.email}"></td>
-					<td th:text="${student.moNo}"></td>
-					<td>
-						<div class="d-flex flex-wrap justify-content-center gap-2">
+      /* Active link */
+      .nav-link.active {
+        border-bottom: 2px solid #ffd60a;
+      }
 
-							<a th:href="@{students/edit/{id}(id=${student.id})}"
-								class="btn btn-warning btn-sm mr-1" > Update </a> <a
-								th:href="@{students/{id}(id=${student.id})}"
-								class="btn btn-danger btn-sm"
-								onclick="return confirm('Are you sure?')"> Delete </a>
+      .tr-nav {
+        background: linear-gradient(90deg, #0d1b2a, #1b263b);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar py-3">
+      <div class="container">
+        <a class="navbar-brand" href="/students"> 🎓 Student Management </a>
 
-						</div>
-					</td>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
+        <div
+          class="collapse navbar-collapse justify-content-center"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item mx-2">
+              <a class="nav-link active" href="/home">Home</a>
+            </li>
+            <li class="nav-item mx-2">
+              <a class="nav-link" href="/students">Students</a>
+            </li>
+          </ul>
+        </div>
+        <div class="mb-2 mt-2 d-flex justify-content-end gap-4">
+          <a href="/students/new" class="btn btn-warning mr-3">
+            + Add Student
+          </a>
 
-				</tr>
-			</tbody>
-		</table>
-	</div>
+          <form
+            action="/students/deleteAll"
+            method="post"
+            onsubmit="return confirm('Delete all students?');"
+          >
+            <button type="submit" class="btn btn-danger">🗑 Delete All</button>
+          </form>
+        </div>
+      </div>
+    </nav>
 
-</body>
+    <div class="container">
+      <div>
+        <h2 class="text-center mt-2">Student List</h2>
+      </div>
+      <div class="row">
+        <div class="col-lg-3">
+          <a th:href="@{students/new}" class="btn btn-primary btn-sm mb-2"
+            >Add Student</a
+          >
+        </div>
+      </div>
+      <table class="table table-stripped table-bordered">
+        <thead class="tr-nav">
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="student : ${students}">
+            <td th:text="${student.firstName}"></td>
+            <td th:text="${student.lastName}"></td>
+            <td th:text="${student.email}"></td>
+            <td th:text="${student.moNo}"></td>
+            <td>
+              <div class="d-flex flex-wrap justify-content-center gap-2">
+                <a
+                  th:href="@{students/edit/{id}(id=${student.id})}"
+                  class="btn btn-warning btn-sm mr-1"
+                >
+                  Update
+                </a>
+                <a
+                  th:href="@{students/{id}(id=${student.id})}"
+                  class="btn btn-danger btn-sm"
+                  onclick="return confirm('Are you sure?');"
+                >
+                  Delete
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

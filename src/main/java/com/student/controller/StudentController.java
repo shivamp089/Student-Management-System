@@ -73,4 +73,10 @@ public class StudentController {
 		
 		return "redirect:/students";
 	}
+
+	@PostMapping("/students/deleteAll")
+public String deleteAllStudents() {
+    studentService.deleteAllStudents();
+    return "redirect:/students";
+}
 }

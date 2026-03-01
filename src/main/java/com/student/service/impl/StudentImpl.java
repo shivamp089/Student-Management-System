@@ -39,4 +39,11 @@ public class StudentImpl implements StudentServices {
 		// TODO Auto-generated method stub
 		 studentRepository.deleteById(id);
 	}
+
+	@Override
+	public void deleteAllStudents() {
+		studentRepository.deleteAll();
+	}
+
+
 }
